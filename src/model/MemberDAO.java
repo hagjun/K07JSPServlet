@@ -4,10 +4,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+/*
+ DAO(Data Access Object)
+  	: 데이터베이스의 Data에 접근하기 위한객체이다.
+  	DB접근을 위한 로직으로 주로 구성된다. MVC패턴에서는
+  	M(Model)에 해당된다.
+ */
+
 
 public class MemberDAO {
    
-   Connection con;
+   Connection con; //커넥션 객체를 멤버변수로 설정히여 공유
    PreparedStatement psmt;
    ResultSet rs;
    
@@ -35,6 +42,7 @@ public class MemberDAO {
          Class.forName(driver);
          String id = "kosmo";
          String pw = "1234";
+         //DB에 연결된 정보를 멤버변수에 저장
          con = DriverManager.getConnection(url, id, pw);
          System.out.println("DB연결 성공");
       }
@@ -54,6 +62,7 @@ public class MemberDAO {
       
       try {
     	  //prepare 객체를 통해 쿼리문을 전송한다.
+    	  //생성자에서 연결정보를 저장하는 커넥션 객체를 사용함.
          psmt = con.prepareStatement(sql);
          //쿼리문의 인파라미터 설정(DB의 인덱스는 1부터 시작)
          psmt.setString(1, id);
