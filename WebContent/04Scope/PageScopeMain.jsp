@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="model.MemberDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -52,7 +53,7 @@ pageContext.setAttribute("pageMember2", new MemberDTO("Nakja","1234","성강사"
 	가져오게 된다.
 	*/
 	Object obj = pageContext.getAttribute("pageDate");
-	String dataString = "";
+	String dateString = "";
 	//해당 객체가 Date형으로 형변환 가능하다면...
 	if(obj instanceof Date){
 		//형 변환후 사용한다.
@@ -64,12 +65,12 @@ pageContext.setAttribute("pageMember2", new MemberDTO("Nakja","1234","성강사"
 	하나의 String객체를 만들게 된다.
 	*/
 	MemberDTO m1 = (MemberDTO)pageContext.getAttribute("pageMember1");
-	String m1Str = String.format("아이디:%s,비번:%s,이름:%s,가입일:%s,"
+	String m1Str = String.format("아이디:%s,비번:%s,이름:%s,가입일:%s",
 						m1.getId(),
 						m1.getPass(),
 						m1.getName(),
 						m1.getRegidate());
-	MemberDto m2 = (MemberDTO)pageContext.getAttribute("pageMember2");
+	MemberDTO m2 = (MemberDTO)pageContext.getAttribute("pageMember2");
 	
 	
 	%>

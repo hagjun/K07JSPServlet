@@ -29,7 +29,7 @@
 	<h2>쿠키글 설정하는 현재페이지에서 쿠키값 확인하기</h2>
 	<%
 	Cookie[] cookies = request.getCookies();
-	if(Cookie!=null){
+	if(cookies!=null){
 		
 		for(Cookie c : cookies){
 			String cookiName = c.getName();
