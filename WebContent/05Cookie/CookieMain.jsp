@@ -17,7 +17,7 @@
 	<%
 	/*
 	1.쿠키객체생성 : new Cookie(쿠키명, 쿠키값)
-		: 쿠키명을 설정하는 setName() 함수가 별도로 존대하지
+		: 쿠키명을 설정하는 setName() 함수가 별도로 존재하지
 		않으므로 생성자를 통해 쿠키명을 설정한다.
 	*/
 	Cookie cookie =  new Cookie("UserID", "KOSMO");
