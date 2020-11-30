@@ -19,175 +19,175 @@ public class BbsDAO {
    /*
     * 인자생성자1 : JSP파일에서 web.xml에 등록된 컨텍스트 초기화 파라미터를 가져와서 생성자 호출시 파라미터로 전달한다.
     */
-   public BbsDAO(String driver, String url) {
-      try {
-         Class.forName(driver);
-         String id = "kosmo";
-         String pw = "1234";
-         // DB에 연결된 정보를 멤버변수에 저장
-         con = DriverManager.getConnection(url, id, pw);
-         System.out.println("DB연결 성공");
-      } catch (Exception e) {
-         System.out.println("DB연결 실패");
-         e.printStackTrace();
-      }
-   }
+public BbsDAO(String driver, String url) {
+    try {
+        Class.forName(driver);
+        String id = "kosmo";
+        String pw = "1234";
+        // DB에 연결된 정보를 멤버변수에 저장
+        con = DriverManager.getConnection(url, id, pw);
+        System.out.println("DB연결 성공");
+    } catch (Exception e) {
+        System.out.println("DB연결 실패");
+        e.printStackTrace();
+    }
+}
 
    /*
     * 데이터베이스의 연결을 해제할떄 사용. 컴퓨터는 한정된 자원을 사용하므로 연결했다면 반드시 연결을 해제해줘야 한다.
     */
-   public void close() {
-      try {
-         // 사용된 자원이 있다면 자원해제 해준다.
-         if (rs != null)
+public void close() {
+    try {
+        // 사용된 자원이 있다면 자원해제 해준다.
+        if (rs != null)
             rs.close();
-         if (psmt != null)
+        if (psmt != null)
             psmt.close();
-         if (con != null)
+        if (con != null)
             con.close();
-      } catch (Exception e) {
-         System.out.println("자원반납시 예외발생");
-      }
-   }
+    } catch (Exception e) {
+        System.out.println("자원반납시 예외발생");
+    }
+}
 
    /*
     * 게시판 리스트에서 게시물의 갯수를 count() 그룹함수를 통해 구해서 반환한다. 게시물의 가상번호, 페이지처리를 위해 사용된다.
     */
-   public int getTotalRecordCount(Map<String, Object> map) {
+public int getTotalRecordCount(Map<String, Object> map) {
 
-      // 게시물의 갯수는 최초 0으로 초기화
-      int totalCount = 0;
-      // 기본쿼리문(전체레코드를 대상으로 함)
-      String query = "SELECT COUNT(*) FROM board";
+    // 게시물의 갯수는 최초 0으로 초기화
+    int totalCount = 0;
+    // 기본쿼리문(전체레코드를 대상으로 함)
+    String query = "SELECT COUNT(*) FROM board";
 
-      // JSP페이지에서 검색어를 입력한 경우 where절이 동적으로 추가된다.
-      if (map.get("Word") != null) {// 여긴 스페이스가 없어서...boardWHERE 요렇게 되는거지...
-         query += " WHERE " + map.get("Column") + " " + " LIKE '%" + map.get("Word") + "%'";
-      }
-      System.out.println("query=" + query);
+	// JSP페이지에서 검색어를 입력한 경우 where절이 동적으로 추가된다.
+	if (map.get("Word") != null) {// 여긴 스페이스가 없어서...boardWHERE 요렇게 되는거지...
+	    query += " WHERE " + map.get("Column") + " " + " LIKE '%" + map.get("Word") + "%'";
+	}
+	System.out.println("query=" + query);
+	
+	try {
+        // 쿼리 실핼 후 결과값 반환
+        psmt = con.prepareStatement(query);
+        rs = psmt.executeQuery();
+        rs.next();
+        totalCount = rs.getInt(1);
 
-      try {
-         // 쿼리 실핼 후 결과값 반환
-         psmt = con.prepareStatement(query);
-         rs = psmt.executeQuery();
-         rs.next();
-         totalCount = rs.getInt(1);
+    	} catch (Exception e) {
+    }
 
-      } catch (Exception e) {
-      }
-
-      return totalCount;
-   }
+    return totalCount;
+}
 
    /*
     * 게시판 리스트에서 조건에 맞는 레코드를 select하여 ResultSet을 List컬렉션에 저장한 후 반환하는 메소드
     */
-   public List<BbsDTO> selectList(Map<String, Object> map) {
+public List<BbsDTO> selectList(Map<String, Object> map) {
 
-      // 리스트 컬렉션을 생성
-      List<BbsDTO> bbs = new Vector<BbsDTO>();
+    // 리스트 컬렉션을 생성
+    List<BbsDTO> bbs = new Vector<BbsDTO>();
 
-      // 기본쿼리문
-      String query = "SELECT * FROM board ";
+    // 기본쿼리문
+    String query = "SELECT * FROM board ";
 
-      // 검색어가 있을경우 조건절 동적 추가
-      if (map.get("Word") != null) {// 여긴 스페이스 있는데...
-         query += " WHERE " + map.get("Column") + " " + " LIKE '%" + map.get("Word") + "%'";
-      }
+    // 검색어가 있을경우 조건절 동적 추가
+    if (map.get("Word") != null) {// 여긴 스페이스 있는데...
+        query += " WHERE " + map.get("Column") + " " + " LIKE '%" + map.get("Word") + "%'";
+    }
 
-      // 최근 게시물을 항상 위로 노출해야하므로 작성된 순서의 역순으로 정렬한다.
-      query += " ORDER BY num DESC";
-      try {
-         psmt = con.prepareStatement(query);
-         rs = psmt.executeQuery();
+    // 최근 게시물을 항상 위로 노출해야하므로 작성된 순서의 역순으로 정렬한다.
+    query += " ORDER BY num DESC";
+    try {
+        psmt = con.prepareStatement(query);
+        rs = psmt.executeQuery();
 
-         // 오라클이 반환해준 ResultSet의 갯수만큼 반복
-         while (rs.next()) {
-            // 하나의 레코드를 DTO객체에 저장하기 위해 새로운 객체생성
-            BbsDTO dto = new BbsDTO();
+        // 오라클이 반환해준 ResultSet의 갯수만큼 반복
+        while (rs.next()) {
+           // 하나의 레코드를 DTO객체에 저장하기 위해 새로운 객체생성
+           BbsDTO dto = new BbsDTO();
 
-            // setter()를 통해 각각의 컬럼에 데이터 저장
-            dto.setNum(rs.getString(1));
-            dto.setTitle(rs.getString("title"));
-            dto.setContent(rs.getString(3));
-            dto.setPostdate(rs.getDate("postdate"));
-            dto.setId(rs.getString("id"));
-            dto.setVisitcount(rs.getString(6));
+        // setter()를 통해 각각의 컬럼에 데이터 저장
+        dto.setNum(rs.getString(1));
+        dto.setTitle(rs.getString("title"));
+        dto.setContent(rs.getString(3));
+        dto.setPostdate(rs.getDate("postdate"));
+        dto.setId(rs.getString("id"));
+        dto.setVisitcount(rs.getString(6));
 
             // DTO객체를 List컬렉션에 추
             bbs.add(dto);
-         }
-      } catch (Exception e) {
-         System.out.println("Select시 예외발생");
-         e.printStackTrace();
+        }
+    } catch (Exception e) {
+        System.out.println("Select시 예외발생");
+        e.printStackTrace();
 
-      }
+    }
 
-      return bbs;
-   }
+    return bbs;
+}
 
    /*
     * 인자생성자2 : JSP에서는 application
     */
-   public BbsDAO(ServletContext ctx) {
-      try {
-         Class.forName(ctx.getInitParameter("JDBCDriver"));
-         String id = "kosmo";
-         String pw = "1234";
-         con = DriverManager.getConnection(ctx.getInitParameter("ConnectionURL"), id, pw);
-         System.out.println("DB 연결성공^^*");
+public BbsDAO(ServletContext ctx) {
+    try {
+        Class.forName(ctx.getInitParameter("JDBCDriver"));
+        String id = "kosmo";
+        String pw = "1234";
+        con = DriverManager.getConnection(ctx.getInitParameter("ConnectionURL"), id, pw);
+        System.out.println("DB 연결성공^^*");
 
-      } catch (Exception e) {
-         System.out.println("DB 연결실패ㅜㅜ;");
-         e.printStackTrace();
-      }
-   }
+    } catch (Exception e) {
+        System.out.println("DB 연결실패ㅜㅜ;");
+        e.printStackTrace();
+    }
+}
 
    // 글쓰기 처리 메소드
-   public int insertWrite(BbsDTO dto) {
+public int insertWrite(BbsDTO dto) {
 
-      int affected = 0;
-      try {
-         /*
-          * 데이터 입력을 위한 insert문 작성. 일련번호 입력을 위해 sequence를 사용하여 중복되지 않는 값을 입력한다.
-          */
-         String query = "INSERT INTO board ( num,title,content,id,visitcount) "
-               + " VALUES ( seq_board_num.NEXTVAL, ?, ?, ?, 0)";
+    int affected = 0;
+    try {
+        /*
+          	데이터 입력을 위한 insert문 작성. 일련번호 입력을 위해 sequence를 사용하여 중복되지 않는 값을 입력한다.
+        */
+        String query = "INSERT INTO board ( num,title,content,id,visitcount) "
+            + " VALUES ( seq_board_num.NEXTVAL, ?, ?, ?, 0)";
 
-         psmt = con.prepareStatement(query);
-         psmt.setString(1, dto.getTitle());
-         psmt.setString(2, dto.getContent());
-         psmt.setString(3, dto.getId());
-         /*
-          * 쿼리문 실핼시 사용하는 메소드 executeQuery() : select계열의 쿼리문을 실행할때 사용한다. 행에 영향을 주지 않고 조회를
-          * 위해 사용된다. 반환타입은 ResultSet이다. executeUpdate() : insert,delete,update 쿼리문을 실행할때
-          * 사용한다. 행에 영향을 주게되고 반환타입은 쿼리의 영향을 받은 행의 갯수가 반환되므로 int형이 된다.
-          */
-         affected = psmt.executeUpdate();
-      } catch (Exception e) {
-         System.out.println("insert중 예외발생");
-         e.printStackTrace();
-      }
+        psmt = con.prepareStatement(query);
+        psmt.setString(1, dto.getTitle());
+        psmt.setString(2, dto.getContent());
+        psmt.setString(3, dto.getId());
+        /*
+        * 쿼리문 실핼시 사용하는 메소드 executeQuery() : select계열의 쿼리문을 실행할때 사용한다. 행에 영향을 주지 않고 조회를
+        * 위해 사용된다. 반환타입은 ResultSet이다. executeUpdate() : insert,delete,update 쿼리문을 실행할때
+        * 사용한다. 행에 영향을 주게되고 반환타입은 쿼리의 영향을 받은 행의 갯수가 반환되므로 int형이 된다.
+        */
+        affected = psmt.executeUpdate();
+    } catch (Exception e) {
+        System.out.println("insert중 예외발생");
+        e.printStackTrace();
+    }
 
       return affected;
-   }
+}
 
-   public void updateVisitCount(String num) {
-      String query = "UPDATE board SET "
-               + " visitcount=visitcount+1"
-               + " WHERE num=?";
+public void updateVisitCount(String num) {
+    String query = "UPDATE board SET "
+            + " visitcount=visitcount+1"
+            + " WHERE num=?";
 
-      try {
-         psmt = con.prepareStatement(query);
-         psmt.setString(1, num);
-         psmt.executeQuery();
-      }
-      catch (Exception e) {
-         System.out.println("조회수 증가시 예외발생");
-         e.printStackTrace();
-      }
-   }
-   
+    try {
+        psmt = con.prepareStatement(query);
+        psmt.setString(1, num);
+        psmt.executeQuery();
+    }
+    catch (Exception e) {
+        System.out.println("조회수 증가시 예외발생");
+        e.printStackTrace();
+    }
+}
+   //게시물 수정하기
    public BbsDTO selectView(String num) {
       
       BbsDTO dto = new BbsDTO();
@@ -223,10 +223,107 @@ public class BbsDAO {
       catch (Exception e) {
          System.out.println("상세보기 시 예외발생");
          e.printStackTrace();
-      }
-      return dto;
-   }
+      	}
+      	return dto;
 }
+   	//게시물 수정	
+    public int updateEdit(BbsDTO dto) {
+		int affected = 0;
+		try {
+    		String query = "UPDATE board SET"
+    				+ " title=?, content=? "
+    				+ " WHERE num=?";
+    		
+    		psmt = con.prepareStatement(query);
+    		psmt.setString(1, dto.getTitle());
+    		psmt.setString(2, dto.getContent());
+    		psmt.setString(3, dto.getNum());
+    		
+    		affected = psmt.executeUpdate();
+    				  
+    	}
+		catch(Exception e) {
+			System.out.println("update중 예외발생");
+			e.printStackTrace();
+		}
+		
+		return affected;
+    }
+    //게시물 삭제 처리
+    public int delete(BbsDTO dto) {
+    	int affected = 0;
+    	try {
+    		String query = "DELETE FROM board WHERE num=?";
+    		
+    		psmt = con.prepareStatement(query);
+    		psmt.setString(1, dto.getNum());
+    		
+    		affected = psmt.executeUpdate();
+    	}
+    	catch(Exception e) {
+    		System.out.println("delete중 예외발생");
+    		e.printStackTrace();
+    	}
+    	
+    	return affected;
+    }
+    
+    public List<BbsDTO> selectListPage(Map<String,Object>map){
+    	
+    	List<BbsDTO> bbs = new Vector<BbsDTO>();
+    	
+    	String query = " "
+			+" SELECT * FROM ( "
+    	    +"   SELECT Tb.*, ROWNUM rNum FROM ( "
+    	    +"    SELECT * FROM board ";
+    	if(map.get("Word")!=null)
+    	{
+    		query +=" WHERE "+ map.get("Column") +" "
+    			+" LIKE '%"+ map.get("Word") +"%' ";
+    	}
+    	query +=" "
+    		+"    ORDER BY num DESC "
+    		+"   ) Tb "
+    		+" ) "
+    		+" WHERE rNum BETWEEN ? AND ?";
+    	System.out.println("쿼리문:"+ query);
+    	
+    	try {
+    		psmt = con.prepareStatement(query);
+    		
+    		psmt.setString(1, map.get("start").toString());
+    		psmt.setString(2, map.get("end").toString());
+    		
+    		rs = psmt.executeQuery();
+    		
+    		while(rs.next()) {
+    			BbsDTO dto = new BbsDTO();
+    			
+    			dto.setNum(rs.getString("num"));
+    			dto.setTitle(rs.getString("title"));
+    			dto.setContent(rs.getString("content"));
+    			dto.setPostdate(rs.getDate("postdate"));
+    			dto.setId(rs.getString("id"));
+    			dto.setVisitcount(rs.getString("visitcount"));
+    			
+    			bbs.add(dto);
+    		}
+    	}
+    	
+    	catch(Exception e) {
+    		System.out.println("Select시 예외발생");
+    		e.printStackTrace();
+    	}
+    	return bbs;
+    }
+    
+    
+    
+    
+    
+    
+}
+
 
 
 

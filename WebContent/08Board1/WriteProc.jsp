@@ -21,8 +21,23 @@ dto.setId(session.getAttribute("USER_ID").toString());
 //DAO객체 생성시 application 내장객체를 파라미터로 전달
 BbsDAO dao = new BbsDAO(application);
 
+/*
+테스트 데이터가 필요한 경우 아래 for문을 사용하세요. 
+100개가 한번에 입력됩니다.
+int affected = 1;
+for(int i=1 ; i<=100 ; i++){
+	
+	dto.setTitle(title+" "+i+"번째 게시물");
+	dao.insertWrite(dto);
+	
+}*/
 int affected = dao.insertWrite(dto);
 if(affected==1){
+	/*
+	새로운 게시물이 작성되었으므로 확인을 위해
+	리스트의 첫번쨰 페이지로 이동해야 한다.
+	*/
+	
    //글쓰기에 성공했을때
    response.sendRedirect("BoardList.jsp");
 }
