@@ -79,8 +79,13 @@
    
    <c:set var="fnum" value="9" />
    <c:set var="snum" value="5" />
-   \${fnum=99 } : ${fnum=99 }
-   
+   \${fnum=99 } : ${fnum=99 } <!-- 99로 재할당되어 99가 출력됨 -->
+   <!-- 
+   		EL에서는 정수와 정수를 연산하더라도 실수의
+   		결과가 나올수 있다. 즉 자동형변환되어 출력된다.
+   		나눗셈을 위한 / 연산자대신 div,
+   		나머지를 구하는 %대신 mod를 사용할 수 있따.
+    -->
    <h3>EL의 산술연산자</h3>
    <ul>
       <li>\${fnum+snum } : ${fnum+snum }</li>
@@ -89,22 +94,52 @@
       
       <li>\${fnum % snum } : ${fnum % snum }</li>
       <li>\${fnum mod snum } : ${fnum mod snum }</li>
-      
+      <!-- 
+      	EL에서는 + 연산자는 덧셈의 용도로만 사용된다.
+      	문자열을 연결하기 위한 용도로는 사용할수 없다.
+      	아래문장중 "100"은 자동으로 숫자로 변경된후 연산된다.
+      	나머지 NumberFormatException이 발생된다.
+       -->
       <li>\${"100"+100 } : ${"100"+100 }</li>
       <li>\${"Hello~"+"EL~" } : \${"Hello~"+"EL~" }</li>
       <li>\${"일"+2 } : \${"일"+2  }</li>
    </ul>
    
+   <!-- 
+   		EL에서는 비교연산자를 이용한 비교시 변수의 값을 모두 문자열로
+   		인식하여 String 클래스의 compareTo()의 같은방식으로
+   		비교한다. 즉, 척번쨰 문자부터 하나씩 비교해나간다.
+   		단, 실제 숫자의 비교시에는 일반적인 숫자 비교가 이루어진다.
+    -->
    <h3>EL의 비교연산자</h3>
    <c:set var="fnum" value="100" />
    <c:set var="snum" value="90" />
    <ul>
-      <li>\${fnum > snum } : ${fnum > snum }</li>
-      <li>\${100 > 90 } : ${100 > 90 }</li>
+   <!-- 
+   		fnum과snum은 영역에 저장된 데이터이므로 object형으로
+   		저장된다. 따라서 비교시 객체상태에서 비교가 이루어지게된다.
+   		100과 90은 실제 숫자의 비교가 이루어진다.
+    -->
+      <li>\${fnum > snum } : ${fnum > snum }</li><!-- 결과 : false -->
+      <li>\${100 > 90 } : ${100 > 90 }</li><!-- 결과 : true -->
       
-      <li>\${"JAVA"=='JAVA' } : ${"JAVA"=='JAVA' }</li>
-      <li>\${"Java"=='Java' } : ${"Java"=='Java' }</li>
+      <!-- 
+      		Java에서는 문자열을 비교할때 equals()로 비교하자면
+      		EL에서는 ==의 형태로 비교한다.
+       -->
+      <li>\${"JAVA"=='JAVA' } : ${"JAVA"=='JAVA' }</li><!-- 결과 : true -->
+      <li>\${"Java"=='Java' } : ${"Java"=='Java' }</li><!-- 결과 : false -->
    </ul>
+   
+   
+	<!-- > : gt(Greater Then) 
+	 >= : ge(Greater then Equal) 
+	 < : lt(Less Then) 
+	 <= : le(Less then Equal) 
+	 == : eq(EQual) 
+	 != : ne(Not Equal) 
+	 && : And 
+	 || : Or -->
    
    <h3>EL의 논리연산자</h3>
    <ul>
@@ -117,7 +152,14 @@
    <h3>EL의 삼항연산자</h3>
    \${10 gt 9 ? "참이다" : "거짓이다" }
       : ${10 gt 9 ? "참이다" : "거짓이다" }
-      
+    
+    
+   <!-- 
+   	null이거나""(반문자열)일떄
+   		혹은 배열인 경우 길이가 0일때
+   		혹은 컬렉션인 경우 size가 0일때
+   	true를 반환하는 연산자.
+    -->   
    <h3>EL의 empty 연산자 : null일 때 true를 반환하는 연산자</h3>
    <%
       String nullStr = null;
