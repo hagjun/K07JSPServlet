@@ -36,7 +36,7 @@ else{
 	/*
 		로그인 실패시에는 에러메세지를 리퀘스트영역에 저장한후
 		메인페이지로 포워드(페이지 전달)한다. 포워드 된 페이지까지
-		리퀘스트 영역이 옹유되므로 해당 메세지는 화면에 출력할수 있다.
+		리퀘스트 영역이 공유되므로 해당 메세지는 화면에 출력할수 있다.
 	*/
 	request.setAttribute("ERROR_MSG", "회원이 아닙니다");
 	request.getRequestDispatcher("CookieLoginMain.jsp")
