@@ -15,7 +15,7 @@
          <div class="col-9 pt-3">
             <!-- ### 게시판의 body 부분  start ### -->
             <h3>
-               자료실 - <small>Model2방식의 Servlet게시판</small>
+                	자료실 - <small>Model2방식의 Servlet게시판</small>
             </h3>
             <h4>${test }</h4>
             <div class="row">
@@ -82,8 +82,8 @@
                                     href="../DataRoom/DataView?idx=${row.idx }&nowPage=${param.nowPage}">
                                        ${row.title } </a></td>
                                  <td class="text-center">${row.name }</td>
-                                 <td class="text-center">${row.visitcount }</td>
                                  <td class="text-center">${row.postdate }</td>
+                                 <td class="text-center">${row.visitcount }</td>
                                  <td class="text-center"><c:if
                                        test="${not empty row.attachedfile }">
                                        <a
