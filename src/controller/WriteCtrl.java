@@ -65,7 +65,16 @@ public class WriteCtrl extends HttpServlet{
 	         //파일업로드 성공 및 insert성공시...
 	         sucOrFail = dao.insert(dto);
 	         
+	         //페이지 처리를 위한 100개 데이터 입력
+//	         sucOrFail = 1; 
+//	         for (int i = 1 ; i<=100; i++) {
+//	        	 dto.setTitle("자료실"+i+"번째 포스팅");
+//	        	 dao.insert(dto);
+//	         }
+	         
 	         dao.close();
+	                   
+	         
 	      }
 	      else {
 	    	  //mr객체가 생성되지 않은경우, 즉 파일업로드 실패시..
