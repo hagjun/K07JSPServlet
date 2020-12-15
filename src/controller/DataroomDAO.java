@@ -18,7 +18,7 @@ public class DataroomDAO {
    Connection con;
    PreparedStatement psmt;
    ResultSet rs;
-
+   //기본생성자에서 DBCP
    public DataroomDAO() {
 	      try {
 	          Context initctx = new InitialContext(); 
