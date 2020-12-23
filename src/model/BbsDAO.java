@@ -30,7 +30,8 @@ public BbsDAO(String driver, String url) {
         // DB에 연결된 정보를 멤버변수에 저장
         con = DriverManager.getConnection(url, id, pw);
         System.out.println("DB연결 성공");
-    } catch (Exception e) {
+    } 
+    catch (Exception e) {
         System.out.println("DB연결 실패");
         e.printStackTrace();
     }
@@ -48,7 +49,8 @@ public void close() {
             psmt.close();
         if (con != null)
             con.close();
-    } catch (Exception e) {
+    } 
+    catch (Exception e) {
         System.out.println("자원반납시 예외발생");
     }
 }
@@ -76,7 +78,9 @@ public int getTotalRecordCount(Map<String, Object> map) {
         rs.next();
         totalCount = rs.getInt(1);
 
-    	} catch (Exception e) {
+    } 
+	
+	catch (Exception e) {
     }
 
     return totalCount;
@@ -105,7 +109,9 @@ public int getTotalRecordCountSearch(Map<String, Object> map) {
         rs.next();
         totalCount = rs.getInt(1);
 
-    	} catch (Exception e) {
+    }
+	
+	catch (Exception e) {
     }
 
     return totalCount;
@@ -150,7 +156,9 @@ public List<BbsDTO> selectList(Map<String, Object> map) {
             // DTO객체를 List컬렉션에 추
             bbs.add(dto);
         }
-    } catch (Exception e) {
+        
+    } 
+    catch (Exception e) {
         System.out.println("Select시 예외발생");
         e.printStackTrace();
 
@@ -171,7 +179,9 @@ public BbsDAO(ServletContext ctx) {
         
         System.out.println("DB 연결성공^^*");
 
-    } catch (Exception e) {
+    } 
+    
+    catch (Exception e) {
         System.out.println("DB 연결실패ㅜㅜ;");
         e.printStackTrace();
     }
@@ -216,7 +226,9 @@ public int insertWrite(BbsDTO dto) {
         * 사용한다. 행에 영향을 주게되고 반환타입은 쿼리의 영향을 받은 행의 갯수가 반환되므로 int형이 된다.
         */
         affected = psmt.executeUpdate();
-    } catch (Exception e) {
+    } 
+    
+    catch (Exception e) {
         System.out.println("insert중 예외발생");
         e.printStackTrace();
     }

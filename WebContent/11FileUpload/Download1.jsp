@@ -57,7 +57,8 @@ try{
 		if(client.indexOf("MSIE") != -1){
 			//웹브라우저가 인터넷 익스플로러 일때 한글 파일명 처리 
 			response.setHeader ("Content-Disposition", "attachment; filename="+new String(orgfilename.getBytes("KSC5601"),"ISO8859_1"));
-		}else{
+		}
+		else{
 			/*
 			익스플로러가 아닐때 한글파일명 처리
 			다운로드시 원본파일명으로 변경할때 이부분을 변경한다. 
@@ -82,7 +83,8 @@ try{
 		while( (leng = in.read(b)) > 0 ){
 			os.write(b,0,leng);
 		}
-	}else{
+	}
+	else{
 		response.setContentType("text/html;charset=UTF-8");
 		out.println("<script language='javascript'>alert('파일을 찾을 수 없습니다');history.back();</script>");
 	}
